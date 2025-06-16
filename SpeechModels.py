@@ -35,12 +35,13 @@ def AttRNNSpeechModel(nCategories, samplingrate=16000,
     m.trainable = False
 
     x = m(inputs)
-    x = tf.expand_dims(x, axis=-1, name='mel_stft')
+    x = L.Lambda(lambda t: tf.expand_dims(t, axis=-1), name='mel_stft')(x)
 
     x = L.Conv2D(10, (5, 1), activation='relu', padding='same')(x)
     x = L.BatchNormalization()(x)
     x = L.Conv2D(1, (5, 1), activation='relu', padding='same')(x)
     x = L.BatchNormalization()(x)
+
 
     # x = Reshape((125, 80)) (x)
     # keras.backend.squeeze(x, axis)
