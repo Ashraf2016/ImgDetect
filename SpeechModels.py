@@ -9,9 +9,17 @@ from tensorflow.keras import backend as K
 from tensorflow.keras import optimizers
 import audioUtils
 
+class NormalizedMelSpectrogramLayer(L.Layer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def call(self, inputs):
+        return audioUtils.normalized_mel_spectrogram(inputs)
+
 def get_melspec_model(iLen=None):
     inp = L.Input((iLen,), name='input')
-    mel_spec = audioUtils.normalized_mel_spectrogram(inp)
+    mel_spec = NormalizedMelSpectrogramLayer()(inp)
+    #mel_spec = audioUtils.normalized_mel_spectrogram(inp)
     melspecModel = Model(inputs=inp, outputs=mel_spec, name='normalized_spectrogram_model')
     return melspecModel
 
